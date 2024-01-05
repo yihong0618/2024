@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: install python 3.10 
+      - name: install python 3.10
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
@@ -28,3 +28,10 @@ jobs:
       - name: GET UP
         run: |
           python get_up.py ${{ secrets.G_T }} ${{ github.repository }}  "${{ secrets.BING_COOKIE }}" --weather_message ": ${{ github.event.inputs.message }}" --tele_token ${{ secrets.TG_TOKEN }} --tele_chat_id ${{ secrets.TG_CHAT_ID }}
+      - name: Push New Pic
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "generated today pic" || echo "no need to commit "
+          git push || echo "no file change"
