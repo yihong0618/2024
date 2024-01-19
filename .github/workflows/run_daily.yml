@@ -1,0 +1,32 @@
+name: Get Daily
+
+on:
+  workflow_dispatch:
+
+env:
+  GITHUB_NAME: yihong0618
+  GITHUB_EMAIL: zouzou0208@gmail.com
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: My GitHub Status
+        uses: yihong0618/github-readme-stats@main
+        with:
+         GH_TOKEN: "${{ secrets.G_T }}"
+         WITH_STARED: false
+
+      - name: Push README
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "new daily stats" || echo "no file change"
+          git push || echo "no need push"
