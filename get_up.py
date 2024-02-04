@@ -12,11 +12,11 @@ from telebot.types import InputMediaPhoto
 
 # 1 real get up
 GET_UP_ISSUE_NUMBER = 1
-GET_UP_MESSAGE_TEMPLATE = (
-    "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n {sentence} \r\n"
-)
+GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n {sentence} \r\n"
 SENTENCE_API = "https://v1.jinrishici.com/all"
-DEFAULT_SENTENCE = "赏花归去马如飞\r\n去马如飞酒力微\r\n酒力微醒时已暮\r\n醒时已暮赏花归\r\n"
+DEFAULT_SENTENCE = (
+    "赏花归去马如飞\r\n去马如飞酒力微\r\n酒力微醒时已暮\r\n醒时已暮赏花归\r\n"
+)
 TIMEZONE = "Asia/Shanghai"
 client = OpenAI()
 
@@ -72,13 +72,15 @@ def make_pic_and_save(sentence, bing_cookie):
     print(f"revies: {sentence}")
 
     images = i.get_images(sentence)
-    date_str = pendulum.now().to_date_string()
+    now = pendulum.now()
+    year = str(now.year)
+    date_str = now.to_date_string()
     new_path = os.path.join("OUT_DIR", date_str)
     if not os.path.exists(new_path):
         os.mkdir(new_path)
     i.save_images(images, new_path)
     index = random.randint(0, len(images) - 1)
-    image_url_for_issue = f"https://github.com/yihong0618/2023/blob/main/OUT_DIR/{date_str}/{index}.jpeg?raw=true"
+    image_url_for_issue = f"https://github.com/yihong0618/{year}/blob/main/OUT_DIR/{date_str}/{index}.jpeg?raw=true"
     return images, image_url_for_issue
 
 
