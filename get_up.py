@@ -18,7 +18,10 @@ DEFAULT_SENTENCE = (
     "赏花归去马如飞\r\n去马如飞酒力微\r\n酒力微醒时已暮\r\n醒时已暮赏花归\r\n"
 )
 TIMEZONE = "Asia/Shanghai"
-client = OpenAI()
+if api_base := os.environ.get("OPENAI_API_BASE"):
+    client = OpenAI(api_base=api_base)
+else:
+    client = OpenAI()
 
 
 def login(token):
