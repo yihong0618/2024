@@ -19,7 +19,7 @@ DEFAULT_SENTENCE = (
 )
 TIMEZONE = "Asia/Shanghai"
 if api_base := os.environ.get("OPENAI_API_BASE"):
-    client = OpenAI(api_base=api_base)
+    client = OpenAI(api_base=api_base, api_key=os.environ.get("OPENAI_API_KEY"))
 else:
     client = OpenAI()
 
