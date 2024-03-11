@@ -1,13 +1,9 @@
-name: Get Daily
+name: Make Weekly Stats
 
 on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * 1'
-
-env:
-  GITHUB_NAME: yihong0618
-  GITHUB_EMAIL: zouzou0208@gmail.com
 
 jobs:
   build:
