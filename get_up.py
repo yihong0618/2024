@@ -164,7 +164,7 @@ def main(
         comment = body + f"![image]({link_for_issue})"
         (
             body
-            + f"\n\n今天的 TIL(github: {os.environ.get('MORNING_USER_NAME')/os.environ.get('MORNING_REPO_NAME')}): {file_name}"
+            + f"\n\n今天的 TIL(github: {os.environ.get('MORNING_USER_NAME')}/{os.environ.get('MORNING_REPO_NAME')}): {file_name}"
         )
         with open(file_name) as f:
             body += escape(f.read())
