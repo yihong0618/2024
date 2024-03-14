@@ -17,18 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-      - name: Checkout Random Repo
-        run: |
-          repos=("jbranchaud/til" "simonw/til")
-          random_repo=${repos[$RANDOM % ${#repos[@]}]}
-          git clone https://github.com/$random_repo.git --depth 1
-          IFS='/' read -ra parts <<< "$random_repo"
-          echo "MORNING_USER_NAME=${parts[0]}}" >> $GITHUB_ENV
-          echo "MORNING_REPO_NAME=${parts[1]}}" >> $GITHUB_ENV
+        uses: actions/checkout@v4
 
       - name: install python 3.10
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: "pip" # caching pip dependencies
@@ -37,6 +29,12 @@ jobs:
           pip install -r requirements.txt
       - name: GET UP
         run: |
+          repos=("jbranchaud/til" "simonw/til") # add more repos here
+          random_repo=${repos[$RANDOM % ${#repos[@]}]}
+          git clone https://github.com/$random_repo.git --depth 1
+          IFS='/' read -ra parts <<< "$random_repo"
+          echo "MORNING_USER_NAME=${parts[0]}}" >> $GITHUB_ENV
+          echo "MORNING_REPO_NAME=${parts[1]}}" >> $GITHUB_ENV
           python get_up.py ${{ secrets.G_T }} ${{ github.repository }}  "${{ secrets.BING_COOKIE }}" --weather_message ": ${{ github.event.inputs.message }}" --tele_token ${{ secrets.TG_TOKEN }} --tele_chat_id ${{ secrets.TG_CHAT_ID }}
       - name: Push New Pic
         run: |
