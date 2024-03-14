@@ -27,14 +27,17 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-      - name: GET UP
+      - name: GET RANDOM REOO
         run: |
           repos=("jbranchaud/til" "simonw/til") # add more repos here
           random_repo=${repos[$RANDOM % ${#repos[@]}]}
-          git clone https://github.com/$random_repo.git --depth 1
           IFS='/' read -ra parts <<< "$random_repo"
           echo "MORNING_USER_NAME=${parts[0]}}" >> $GITHUB_ENV
           echo "MORNING_REPO_NAME=${parts[1]}}" >> $GITHUB_ENV
+      
+      - name: GET UP
+        run: |
+          git clone https://github.com/$MORNING_USER_NAME/$MORNING_REPO_NAME.git --depth 1
           python get_up.py ${{ secrets.G_T }} ${{ github.repository }}  "${{ secrets.BING_COOKIE }}" --weather_message ": ${{ github.event.inputs.message }}" --tele_token ${{ secrets.TG_TOKEN }} --tele_chat_id ${{ secrets.TG_CHAT_ID }}
       - name: Push New Pic
         run: |
