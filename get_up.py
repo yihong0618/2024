@@ -13,7 +13,7 @@ from telebot.types import InputMediaPhoto
 from md2tgmd import escape
 
 # 1 real get up #5 for test
-GET_UP_ISSUE_NUMBER = 5
+GET_UP_ISSUE_NUMBER = 1
 GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n {sentence} \r\n"
 SENTENCE_API = "https://v1.jinrishici.com/all"
 DEFAULT_SENTENCE = (
@@ -107,9 +107,8 @@ def make_get_up_message(bing_cookie, up_list):
     sentence = get_one_sentence(up_list)
     now = pendulum.now(TIMEZONE)
     # 3 - 9 means early for me
-
-    is_get_up_early = 3 <= now.hour <= 24
-    # is_get_up_early = 3 <= now.hour <= 8
+    # is_get_up_early = 3 <= now.hour <= 24
+    is_get_up_early = 3 <= now.hour <= 9
     get_up_time = now.to_datetime_string()
     link_list = []
     try:
