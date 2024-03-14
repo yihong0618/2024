@@ -175,6 +175,8 @@ def main(
             bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
             with open(file_name) as f:
                 body += escape(f.read())
+            print(body)
+            print(len(body))
             bot.send_message(tele_chat_id, body, disable_notification=True)
     else:
         print("You wake up late")
