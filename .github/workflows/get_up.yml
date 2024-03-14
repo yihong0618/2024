@@ -32,8 +32,8 @@ jobs:
           repos=("jbranchaud/til" "simonw/til") # add more repos here
           random_repo=${repos[$RANDOM % ${#repos[@]}]}
           IFS='/' read -ra parts <<< "$random_repo"
-          echo "MORNING_USER_NAME=${parts[0]}}" >> $GITHUB_ENV
-          echo "MORNING_REPO_NAME=${parts[1]}}" >> $GITHUB_ENV
+          echo "MORNING_USER_NAME=${parts[0]}" >> $GITHUB_ENV
+          echo "MORNING_REPO_NAME=${parts[1]}" >> $GITHUB_ENV
       
       - name: GET UP
         run: |
