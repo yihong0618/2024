@@ -5,4 +5,4 @@ rich
 openai
 BingImageCreator-fork
 pyTelegramBotAPI
-
+md2tgmd

@@ -18,6 +18,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Checkout Random Repo
+        run: |
+          repos=("jbranchaud/til" "simonw/til")
+          random_repo=${repos[$RANDOM % ${#repos[@]}]}
+          git clone https://github.com/$random_repo.git --depth 1
+          IFS='/' read -ra parts <<< "$random_repo"
+          echo "MORNING_USER_NAME=${parts[0]}}" >> $GITHUB_ENV
+          echo "MORNING_REPO_NAME=${parts[1]}}" >> $GITHUB_ENV
+
       - name: install python 3.10
         uses: actions/setup-python@v4
         with:
