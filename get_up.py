@@ -162,11 +162,6 @@ def main(
         with open("knowledge.txt", "a") as f:
             f.write(f"{file_name}\n")
         comment = body + f"![image]({link_for_issue})"
-        body = "\n" + body + f"\n今天的 TIL(github: {os.environ.get('MORNING_USER_NAME')}/{os.environ.get('MORNING_REPO_NAME')}): {file_name}"
-        with open(file_name) as f:
-            body += escape(f.read())
-        if len(body) > 1024:
-            body = body[:1000] + "..."  
         issue.create_comment(comment)
         # send to telegram
         if tele_token and tele_chat_id:
@@ -174,6 +169,14 @@ def main(
             photos_list = [InputMediaPhoto(i) for i in link_list]
             photos_list[0].caption = body
             bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
+
+            with open(file_name) as f:
+                til_body = escape(f.read())
+            til_body = (
+                f"TIL(github: {os.environ.get('MORNING_USER_NAME')}/{os.environ.get('MORNING_REPO_NAME')}): {file_name}\n"
+                + til_body
+            )
+            bot.send_message(tele_chat_id, til_body, disable_notification=True)
     else:
         print("You wake up late")
 
