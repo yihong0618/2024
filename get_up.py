@@ -175,6 +175,8 @@ def main(
                 f"TIL(github: {os.environ.get('MORNING_USER_NAME')}/{os.environ.get('MORNING_REPO_NAME')}): {file_name}\n"
                 + til_body
             )
+            if len(til_body) > 1024:
+                til_body = til_body[:1000] + "..."
             bot.send_message(tele_chat_id, til_body, disable_notification=True)
     else:
         print("You wake up late")
