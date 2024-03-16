@@ -178,9 +178,9 @@ def main(
                 til_body = f.read()
                 if len(til_body) > 4095:
                     til_body = til_body[:4094]
-                til_body = escape_markdown(telegramify_markdown.convert(til_body)
+                til_body = escape_markdown(telegramify_markdown.convert(til_body))
             url_name = str(file_name).replace(os.environ.get("MORNING_REPO_NAME"), "")
-            
+
             til_body = (
                 f"TIL: https://github.com/{os.environ.get('MORNING_USER_NAME')}/{os.environ.get('MORNING_REPO_NAME')}/blob/master{url_name}"
                 + "\n"
