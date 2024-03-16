@@ -172,20 +172,13 @@ def main(
             bot = telebot.TeleBot(tele_token)
             photos_list = [InputMediaPhoto(i) for i in link_list]
             photos_list[0].caption = body
-            bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
+            # bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
 
             with open(file_name) as f:
                 til_body = f.read()
                 if len(til_body) > 4095:
                     til_body = til_body[:4094]
                 til_body = escape_markdown(telegramify_markdown.convert(til_body))
-            url_name = str(file_name).replace(os.environ.get("MORNING_REPO_NAME"), "")
-
-            til_body = (
-                f"TIL: https://github.com/{os.environ.get('MORNING_USER_NAME')}/{os.environ.get('MORNING_REPO_NAME')}/blob/master{url_name}"
-                + "\n"
-                + til_body
-            )
             bot.send_message(
                 tele_chat_id,
                 til_body,
