@@ -10,7 +10,11 @@ from BingImageCreator import ImageGen
 from github import Github
 from openai import OpenAI
 from telebot.types import InputMediaPhoto
-from md2tgmd import escape
+import telegramify_markdown
+from telegramify_markdown.customize import markdown_symbol
+
+markdown_symbol.head_level_1 = "📌"  # If you want, Customizing the head level 1 symbol
+markdown_symbol.link = "🔗"  # If you want, Customizing the link symbol
 
 # 1 real get up #5 for test
 GET_UP_ISSUE_NUMBER = 5
@@ -170,15 +174,20 @@ def main(
             bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
 
             with open(file_name) as f:
-                til_body = escape(f.read())
+                til_body = telegramify_markdown.convert(f.read())
             til_body = (
-                f"TIL: [{file_name}](https://github.com/{os.environ.get('MORNING_USER_NAME')}/{os.environ.get('MORNING_REPO_NAME')})/blob/master/{file_name})"
+                f"TIL: [{file_name}](https://github.com/{os.environ.get('MORNING_USER_NAME')}/{os.environ.get('MORNING_REPO_NAME')}/blob/master/{file_name})"
                 + "\n"
                 + til_body
             )
             if len(til_body) > 4095:
                 til_body = til_body[:4090] + "..."
-            bot.send_message(tele_chat_id, til_body, disable_notification=True)
+            bot.send_message(
+                tele_chat_id,
+                til_body,
+                parse_mode="MarkdownV2",
+                disable_notification=True,
+            )
     else:
         print("You wake up late")
 
