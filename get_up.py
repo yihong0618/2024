@@ -12,6 +12,7 @@ from openai import OpenAI
 from telebot.types import InputMediaPhoto
 import telegramify_markdown
 from telegramify_markdown.customize import markdown_symbol
+from telebot.formatting import escape_markdown
 
 markdown_symbol.head_level_1 = "📌"  # If you want, Customizing the head level 1 symbol
 markdown_symbol.link = "🔗"  # If you want, Customizing the link symbol
@@ -171,7 +172,7 @@ def main(
             bot = telebot.TeleBot(tele_token)
             photos_list = [InputMediaPhoto(i) for i in link_list]
             photos_list[0].caption = body
-            bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
+            # bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
 
             with open(file_name) as f:
                 til_body = telegramify_markdown.convert(f.read())
@@ -182,6 +183,7 @@ def main(
             )
             if len(til_body) > 4095:
                 til_body = til_body[:4090] + "..."
+            til_body = escape_markdown(til_body)
             bot.send_message(
                 tele_chat_id,
                 til_body,
