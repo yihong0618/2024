@@ -18,7 +18,7 @@ markdown_symbol.head_level_1 = "📌"  # If you want, Customizing the head level
 markdown_symbol.link = "🔗"  # If you want, Customizing the link symbol
 
 # 1 real get up #5 for test
-GET_UP_ISSUE_NUMBER = 1
+GET_UP_ISSUE_NUMBER = 5
 GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n {sentence} \r\n"
 SENTENCE_API = "https://v1.jinrishici.com/all"
 DEFAULT_SENTENCE = (
@@ -112,8 +112,8 @@ def make_get_up_message(bing_cookie, up_list):
     sentence = get_one_sentence(up_list)
     now = pendulum.now(TIMEZONE)
     # 3 - 9 means early for me
-    # is_get_up_early = 3 <= now.hour <= 24
-    is_get_up_early = 3 <= now.hour <= 9
+    is_get_up_early = 3 <= now.hour <= 24
+    # is_get_up_early = 3 <= now.hour <= 9
     get_up_time = now.to_datetime_string()
     link_list = []
     try:
@@ -146,7 +146,7 @@ def main(
     is_today, up_list = get_today_get_up_status(issue)
     if is_today:
         print("Today I have recorded the wake up time")
-        # return
+        return
     early_message, is_get_up_early, link_list, link_for_issue = make_get_up_message(
         bing_cookie, up_list
     )
@@ -172,7 +172,7 @@ def main(
             bot = telebot.TeleBot(tele_token)
             photos_list = [InputMediaPhoto(i) for i in link_list]
             photos_list[0].caption = body
-            # bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
+            bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
 
             with open(file_name) as f:
                 til_body = f.read()
