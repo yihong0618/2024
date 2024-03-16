@@ -146,7 +146,7 @@ def main(
     is_today, up_list = get_today_get_up_status(issue)
     if is_today:
         print("Today I have recorded the wake up time")
-        return
+        # return
     early_message, is_get_up_early, link_list, link_for_issue = make_get_up_message(
         bing_cookie, up_list
     )
