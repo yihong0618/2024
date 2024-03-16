@@ -175,15 +175,16 @@ def main(
             # bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
 
             with open(file_name) as f:
-                til_body = telegramify_markdown.convert(f.read())
+                til_body = escape_markdown(telegramify_markdown.convert(f.read()))
+            url_name = str(file_name).replace(os.environ.get("MORNING_REPO_NAME"), "")
+            
             til_body = (
-                f"TIL: [{file_name}](https://github.com/{os.environ.get('MORNING_USER_NAME')}/{os.environ.get('MORNING_REPO_NAME')}/blob/master/{file_name})"
+                f"TIL: https://github.com/{os.environ.get('MORNING_USER_NAME')}/{os.environ.get('MORNING_REPO_NAME')}/blob/master{url_name}"
                 + "\n"
                 + til_body
             )
             if len(til_body) > 4095:
                 til_body = til_body[:4090] + "..."
-            til_body = escape_markdown(til_body)
             bot.send_message(
                 tele_chat_id,
                 til_body,
