@@ -13,7 +13,7 @@ from telebot.types import InputMediaPhoto
 from md2tgmd import escape
 
 # 1 real get up #5 for test
-GET_UP_ISSUE_NUMBER = 1
+GET_UP_ISSUE_NUMBER = 5
 GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n {sentence} \r\n"
 SENTENCE_API = "https://v1.jinrishici.com/all"
 DEFAULT_SENTENCE = (
@@ -107,8 +107,8 @@ def make_get_up_message(bing_cookie, up_list):
     sentence = get_one_sentence(up_list)
     now = pendulum.now(TIMEZONE)
     # 3 - 9 means early for me
-    # is_get_up_early = 3 <= now.hour <= 24
-    is_get_up_early = 3 <= now.hour <= 9
+    is_get_up_early = 3 <= now.hour <= 24
+    # is_get_up_early = 3 <= now.hour <= 9
     get_up_time = now.to_datetime_string()
     link_list = []
     try:
@@ -172,11 +172,12 @@ def main(
             with open(file_name) as f:
                 til_body = escape(f.read())
             til_body = (
-                f"TIL(github: {os.environ.get('MORNING_USER_NAME')}/{os.environ.get('MORNING_REPO_NAME')}): {file_name}\n"
+                f"TIL: [{file_name}](https://github.com/{os.environ.get('MORNING_USER_NAME')}/{os.environ.get('MORNING_REPO_NAME')})/blob/master/{file_name})"
+                + "\n"
                 + til_body
             )
-            if len(til_body) > 1024:
-                til_body = til_body[:1000] + "..."
+            if len(til_body) > 4095:
+                til_body = til_body[:4090] + "..."
             bot.send_message(tele_chat_id, til_body, disable_notification=True)
     else:
         print("You wake up late")

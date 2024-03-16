@@ -43,6 +43,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add .
+          git add OUT_DIR/* knowledge.txt
           git commit -m "generated today pic" || echo "no need to commit "
           git push || echo "no file change"
