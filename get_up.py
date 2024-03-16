@@ -11,14 +11,10 @@ from github import Github
 from openai import OpenAI
 from telebot.types import InputMediaPhoto
 import telegramify_markdown
-from telegramify_markdown.customize import markdown_symbol
 from telebot.formatting import escape_markdown
 
-markdown_symbol.head_level_1 = "📌"  # If you want, Customizing the head level 1 symbol
-markdown_symbol.link = "🔗"  # If you want, Customizing the link symbol
-
 # 1 real get up #5 for test
-GET_UP_ISSUE_NUMBER = 5
+GET_UP_ISSUE_NUMBER = 1
 GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n {sentence} \r\n"
 SENTENCE_API = "https://v1.jinrishici.com/all"
 DEFAULT_SENTENCE = (
@@ -112,8 +108,7 @@ def make_get_up_message(bing_cookie, up_list):
     sentence = get_one_sentence(up_list)
     now = pendulum.now(TIMEZONE)
     # 3 - 9 means early for me
-    is_get_up_early = 3 <= now.hour <= 24
-    # is_get_up_early = 3 <= now.hour <= 9
+    is_get_up_early = 3 <= now.hour <= 9
     get_up_time = now.to_datetime_string()
     link_list = []
     try:
@@ -172,10 +167,10 @@ def main(
             bot = telebot.TeleBot(tele_token)
             photos_list = [InputMediaPhoto(i) for i in link_list]
             photos_list[0].caption = body
-            # bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
-
+            bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
+            til_body = "TIL:\n"
             with open(file_name) as f:
-                til_body = f.read()
+                til_body = til_body + f.read()
                 if len(til_body) > 4095:
                     til_body = til_body[:4094]
                 til_body = escape_markdown(telegramify_markdown.convert(til_body))
