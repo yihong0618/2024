@@ -175,6 +175,8 @@ def main(
             # bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
 
             with open(file_name) as f:
+                if len(til_body) > 4095:
+                    til_body = til_body[:4094]
                 til_body = escape_markdown(telegramify_markdown.convert(f.read()))
             url_name = str(file_name).replace(os.environ.get("MORNING_REPO_NAME"), "")
             
@@ -183,8 +185,6 @@ def main(
                 + "\n"
                 + til_body
             )
-            if len(til_body) > 4095:
-                til_body = til_body[:4090] + "..."
             bot.send_message(
                 tele_chat_id,
                 til_body,
