@@ -13,3 +13,4 @@ sed/apply-multiple-substitutions-to-the-input.md
 til/ansible/loop-over-a-list-of-dictionaries.md
 til/css/let-pointer-events-pass-through-an-element.md
 til/cooking/breakfast-tacos.md
+til/shell/check-if-the-first-argument-is-given.md
