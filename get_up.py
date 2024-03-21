@@ -173,7 +173,7 @@ def main(
                 til_body = til_body + f.read()
                 if len(til_body) > 4095:
                     til_body = til_body[:4094]
-                til_body = escape_markdown(telegramify_markdown.convert(til_body))
+                til_body = telegramify_markdown.convert(til_body)
             bot.send_message(
                 tele_chat_id,
                 til_body,
