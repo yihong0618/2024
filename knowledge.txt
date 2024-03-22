@@ -9,3 +9,4 @@ til/shell/check-if-the-first-argument-is-given.md
 til/networking/http-ipv6.md
 til/purpleair/purple-air-aqi.md
 til/chrome/duplicate-the-current-tab.md
+til/remix/relative-and-absolute-paths-in-links.md
