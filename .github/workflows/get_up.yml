@@ -37,9 +37,14 @@ jobs:
           echo "MORNING_BRANCH_NAME=$(git remote show https://github.com/${parts[0]}/${parts[1]}.git | awk '/HEAD branch/ {print $NF}')" >> $GITHUB_ENV
       
       - name: GET UP
-        run: |
-          git clone https://github.com/$MORNING_USER_NAME/$MORNING_REPO_NAME.git --depth 1
-          python get_up.py ${{ secrets.G_T }} ${{ github.repository }}  "${{ secrets.BING_COOKIE }}" --weather_message ": ${{ github.event.inputs.message }}" --tele_token ${{ secrets.TG_TOKEN }} --tele_chat_id ${{ secrets.TG_CHAT_ID }}
+        uses: nick-fields/retry@v3
+        with:
+          timeout_seconds: 100
+          max_attempts: 2
+          retry_on: error
+          command: |
+            git clone https://github.com/$MORNING_USER_NAME/$MORNING_REPO_NAME.git --depth 1
+            python get_up.py ${{ secrets.G_T }} ${{ github.repository }}  "${{ secrets.BING_COOKIE }}" --weather_message ": ${{ github.event.inputs.message }}" --tele_token ${{ secrets.TG_TOKEN }} --tele_chat_id ${{ secrets.TG_CHAT_ID }}
       - name: Push New Pic
         run: |
           git config --local user.email "action@github.com"
