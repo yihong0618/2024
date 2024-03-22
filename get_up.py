@@ -172,7 +172,7 @@ def main(
             user = os.environ.get("MORNING_USER_NAME")
             repo = os.environ.get("MORNING_REPO_NAME")
             branch = os.environ.get("MORNING_BRANCH_NAME")
-            link = f"https://github.com/{user}/{repo}/blob/{branch}/{"/".join(file_name.split("/")[1:])}"
+            link = f"https://github.com/{user}/{repo}/blob/{branch}/{'/'.join(file_name.split('/')[1:])}"
             til_body = til_body + "Link:" + link + "\n"
             with open(file_name) as f:
                 til_body = til_body + f.read()
