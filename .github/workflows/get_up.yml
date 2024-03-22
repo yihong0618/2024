@@ -29,11 +29,12 @@ jobs:
           pip install -r requirements.txt
       - name: GET RANDOM REOO
         run: |
-          repos=("jbranchaud/til" "simonw/til") # add more repos here
+          repos=("jbranchaud/til" "simonw/til" "thoughtbot/til") # add more repos here
           random_repo=${repos[$RANDOM % ${#repos[@]}]}
           IFS='/' read -ra parts <<< "$random_repo"
           echo "MORNING_USER_NAME=${parts[0]}" >> $GITHUB_ENV
           echo "MORNING_REPO_NAME=${parts[1]}" >> $GITHUB_ENV
+          echo "MORNING_BRANCH_NAME=$(git remote show https://github.com/${parts[0]}/${parts[1]}.git | awk '/HEAD branch/ {print $NF}')" >> $GITHUB_ENV
       
       - name: GET UP
         run: |

@@ -1,15 +1,7 @@
-<<<<<<< Updated upstream
-til/github-actions/disable-a-workflow-with-the-gh-cli.md
-til/react/accessing-location-within-reach-router.md
-til/devops/check-the-status-of-all-services.md
-til/sed/apply-multiple-substitutions-to-the-input.md
-til/remix/relative-and-absolute-paths-in-links.md
-=======
 github-actions/disable-a-workflow-with-the-gh-cli.md
 react/accessing-location-within-reach-router.md
 devops/check-the-status-of-all-services.md
 sed/apply-multiple-substitutions-to-the-input.md
->>>>>>> Stashed changes
 til/ansible/loop-over-a-list-of-dictionaries.md
 til/css/let-pointer-events-pass-through-an-element.md
 til/cooking/breakfast-tacos.md
