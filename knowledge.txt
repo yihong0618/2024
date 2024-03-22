@@ -10,3 +10,4 @@ til/networking/http-ipv6.md
 til/purpleair/purple-air-aqi.md
 til/chrome/duplicate-the-current-tab.md
 til/remix/relative-and-absolute-paths-in-links.md
+til/testing/capybara-all-does-not-return-array.md
