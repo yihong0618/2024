@@ -12,3 +12,4 @@ til/chrome/duplicate-the-current-tab.md
 til/remix/relative-and-absolute-paths-in-links.md
 til/testing/capybara-all-does-not-return-array.md
 til/remix/set-the-title-of-a-page.md
+til/security/constant-time-comparison.md
