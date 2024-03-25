@@ -9,7 +9,8 @@ on:
 
 env:
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-  OPENAI_API_BASE: ${{ secrets.OPENAI_API_BASE}}
+  SUNO_COOKIE: ${{ secrets.SUNO_COOKIE }}
+  OPENAI_API_BASE: ${{ secrets.OPENAI_API_BASE }}
 
 jobs:
   sync:

@@ -6,3 +6,4 @@ openai
 BingImageCreator-fork
 pyTelegramBotAPI
 telegramify-markdown
+suno_songs
