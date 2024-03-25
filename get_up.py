@@ -15,7 +15,7 @@ from telebot.types import InputMediaPhoto
 import telegramify_markdown
 
 # 1 real get up #5 for test
-GET_UP_ISSUE_NUMBER = 5
+GET_UP_ISSUE_NUMBER = 1
 GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n {sentence} \r\n"
 SENTENCE_API = "https://v1.jinrishici.com/all"
 DEFAULT_SENTENCE = (
@@ -110,7 +110,6 @@ def make_get_up_message(bing_cookie, up_list):
     now = pendulum.now(TIMEZONE)
     # 3 - 9 means early for me
     is_get_up_early = 3 <= now.hour <= 9
-    is_get_up_early = 3 <= now.hour <= 24
     get_up_time = now.to_datetime_string()
     link_list = []
     try:
@@ -169,7 +168,7 @@ def main(
             bot = telebot.TeleBot(tele_token)
             photos_list = [InputMediaPhoto(i) for i in link_list]
             photos_list[0].caption = body
-            # bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
+            bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
             til_body = "TIL:\n"
             user = os.environ.get("MORNING_USER_NAME")
             repo = os.environ.get("MORNING_REPO_NAME")
@@ -181,13 +180,12 @@ def main(
                 if len(til_body) > 4095:
                     til_body = til_body[:4094]
                 til_body = telegramify_markdown.convert(til_body)
-            # bot.send_message(
-            #     tele_chat_id,
-            #     til_body,
-            #     parse_mode="MarkdownV2",
-            #     disable_notification=True,
-            # )
-            # send songs
+            bot.send_message(
+                tele_chat_id,
+                til_body,
+                parse_mode="MarkdownV2",
+                disable_notification=True,
+            )
             suno = SongsGen(os.environ.get("SUNO_COOKIE"))
             songs_info = suno.get_songs(early_message)
             song_name, lyric, link = songs_info.values()

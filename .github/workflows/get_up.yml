@@ -40,7 +40,7 @@ jobs:
       - name: GET UP
         uses: nick-fields/retry@v3
         with:
-          timeout_seconds: 500
+          timeout_seconds: 600
           max_attempts: 2
           retry_on: error
           command: |
