@@ -18,6 +18,7 @@ import telegramify_markdown
 GET_UP_ISSUE_NUMBER = 1
 GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n {sentence} \r\n"
 SENTENCE_API = "https://v1.jinrishici.com/all"
+POEM_API = "https://v2.jinrishici.com/sentence"
 DEFAULT_SENTENCE = (
     "赏花归去马如飞\r\n去马如飞酒力微\r\n酒力微醒时已暮\r\n醒时已暮赏花归\r\n"
 )
@@ -169,28 +170,10 @@ def main(
             photos_list = [InputMediaPhoto(i) for i in link_list]
             photos_list[0].caption = body
             bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
-            til_body = "TIL:\n"
-            user = os.environ.get("MORNING_USER_NAME")
-            repo = os.environ.get("MORNING_REPO_NAME")
-            branch = os.environ.get("MORNING_BRANCH_NAME")
-            link = f"https://github.com/{user}/{repo}/blob/{branch}/{'/'.join(file_name.split('/')[1:])}"
-            til_body = til_body + "Link: " + link + "\n"
-            with open(file_name) as f:
-                til_body = til_body + f.read()
-                if len(til_body) > 4095:
-                    til_body = til_body[:4094]
-                til_body = telegramify_markdown.convert(til_body)
-            bot.send_message(
-                tele_chat_id,
-                til_body,
-                parse_mode="MarkdownV2",
-                disable_notification=True,
-            )
             suno = SongsGen(os.environ.get("SUNO_COOKIE"))
-            songs_info = suno.get_songs(early_message)
+            songs_info = suno.get_songs(early_message.splitlines()[-1])
             song_name, lyric, link = songs_info.values()
             print(song_name, link)
-            time.sleep(5)
             response = requests.get(link, allow_redirects=False, stream=True)
             if response.status_code != 200:
                 raise Exception("Could not download song")
@@ -208,6 +191,23 @@ def main(
                     caption=f"Song Name: {song_name}\nLyric: {lyric}",
                     disable_notification=True,
                 )
+            til_body = "TIL:\n"
+            user = os.environ.get("MORNING_USER_NAME")
+            repo = os.environ.get("MORNING_REPO_NAME")
+            branch = os.environ.get("MORNING_BRANCH_NAME")
+            link = f"https://github.com/{user}/{repo}/blob/{branch}/{'/'.join(file_name.split('/')[1:])}"
+            til_body = til_body + "Link: " + link + "\n"
+            with open(file_name) as f:
+                til_body = til_body + f.read()
+                if len(til_body) > 4095:
+                    til_body = til_body[:4094]
+                til_body = telegramify_markdown.convert(til_body)
+            bot.send_message(
+                tele_chat_id,
+                til_body,
+                parse_mode="MarkdownV2",
+                disable_notification=True,
+            )
 
     else:
         print("You wake up late")
