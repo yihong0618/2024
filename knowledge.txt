@@ -17,3 +17,4 @@ til/homebrew/using_different_homebrew_formula_versions.md
 til/google-sheets/concatenate.md
 til/xstate/simple-states-and-composite-states.md
 til/rails/disambiguate-where-in-a-joined-relation.md
+til/haskell/sectioning.md
