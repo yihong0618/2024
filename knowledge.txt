@@ -20,3 +20,4 @@ til/rails/disambiguate-where-in-a-joined-relation.md
 til/haskell/sectioning.md
 til/bash/bash_profile_vs_bashrc.md
 til/service-workers/intercept-fetch.md
+til/haskell/ranges-and-enum.md
