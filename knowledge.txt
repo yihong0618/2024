@@ -21,3 +21,4 @@ til/haskell/sectioning.md
 til/bash/bash_profile_vs_bashrc.md
 til/service-workers/intercept-fetch.md
 til/haskell/ranges-and-enum.md
+til/haskell/sorting-in-reverse-order.md
