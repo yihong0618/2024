@@ -24,3 +24,4 @@ til/haskell/ranges-and-enum.md
 til/haskell/sorting-in-reverse-order.md
 til/life/everybody-is-learning.md
 til/git/include-some-stats-in-your-git-log.md
+til/nextjs/make-environment-variable-publicly-available.md
