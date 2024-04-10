@@ -172,7 +172,9 @@ def main(
             bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
             suno = SongsGen(os.environ.get("SUNO_COOKIE"))
             songs_info = suno.get_songs(early_message.splitlines()[-1])
-            song_name, lyric, link = songs_info.values()
+            song_name = songs_info.get("song_name")
+            lyric = songs_info.get("lyric")
+            link = songs_info.get("link")
             print(song_name, link)
             response = requests.get(link, allow_redirects=False, stream=True)
             if response.status_code != 200:
