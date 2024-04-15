@@ -2,13 +2,11 @@ import argparse
 import os
 from pathlib import Path
 import random
-import time
 
 import pendulum
 import requests
 import telebot
 from BingImageCreator import ImageGen
-from suno import SongsGen
 from github import Github
 from openai import OpenAI
 from telebot.types import InputMediaPhoto
@@ -170,29 +168,6 @@ def main(
             photos_list = [InputMediaPhoto(i) for i in link_list]
             photos_list[0].caption = body
             bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
-            suno = SongsGen(os.environ.get("SUNO_COOKIE"))
-            songs_info = suno.get_songs(early_message.splitlines()[-1])
-            song_name = songs_info.get("song_name")
-            lyric = songs_info.get("lyric")
-            link = songs_info.get("link")
-            print(song_name, link)
-            response = requests.get(link, allow_redirects=False, stream=True)
-            if response.status_code != 200:
-                raise Exception("Could not download song")
-            # save response to file
-            with open(os.path.join("suno.mp3"), "wb") as output_file:
-                for chunk in response.iter_content(chunk_size=1024):
-                    # If the chunk is not empty, write it to the file.
-                    if chunk:
-                        output_file.write(chunk)
-
-            with open("suno.mp3", "rb") as audio:
-                bot.send_audio(
-                    tele_chat_id,
-                    audio,
-                    caption=f"Song Name: {song_name}\nLyric: {lyric}",
-                    disable_notification=True,
-                )
             til_body = "TIL:\n"
             user = os.environ.get("MORNING_USER_NAME")
             repo = os.environ.get("MORNING_REPO_NAME")
