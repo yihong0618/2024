@@ -34,3 +34,4 @@ til/yaml/create-multi-line-strings-without-the-line-breaks.md
 til/observable-plot/histogram-with-tooltips.md
 til/html/html5-tidy.md
 til/quarto/trying-out-quarto.md
+til/rails/simpleform-default-maxlength.md
