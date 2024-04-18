@@ -111,6 +111,7 @@ def make_get_up_message(bing_cookie, up_list):
     is_get_up_early = 3 <= now.hour <= 9
     get_up_time = now.to_datetime_string()
     link_list = []
+    link_for_issue = ""
     try:
         link_list, link_for_issue = make_pic_and_save(sentence, bing_cookie)
     except Exception as e:
@@ -167,7 +168,8 @@ def main(
             bot = telebot.TeleBot(tele_token)
             photos_list = [InputMediaPhoto(i) for i in link_list]
             photos_list[0].caption = body
-            bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
+            if link_for_issue:
+                bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
             til_body = "TIL:\n"
             user = os.environ.get("MORNING_USER_NAME")
             repo = os.environ.get("MORNING_REPO_NAME")
