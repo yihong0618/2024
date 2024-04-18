@@ -6,10 +6,8 @@ import random
 import pendulum
 import requests
 import telebot
-from BingImageCreator import ImageGen
 from github import Github
 from openai import OpenAI
-from telebot.types import InputMediaPhoto
 import telegramify_markdown
 
 # 1 real get up #5 for test
@@ -80,7 +78,6 @@ def get_today_get_up_status(issue):
 
 
 def make_pic_and_save(sentence):
-    # for bing image when dall-e3 open drop this function
     prompt = f"revise `{sentence}` to a stable diffusion prompt"
     try:
         completion = client.chat.completions.create(
@@ -118,34 +115,32 @@ def make_pic_and_save(sentence):
     return image_url_for_issue
 
 
-def make_get_up_message(bing_cookie, up_list):
+def make_get_up_message( up_list):
     sentence = get_one_sentence(up_list)
     now = pendulum.now(TIMEZONE)
     # 3 - 9 means early for me
     is_get_up_early = 3 <= now.hour <= 9
     get_up_time = now.to_datetime_string()
-    link_list = []
     link_for_issue = ""
     try:
-        link_list, link_for_issue = make_pic_and_save(sentence)
+        link_for_issue = make_pic_and_save(sentence)
     except Exception as e:
         print(str(e))
         # give it a second chance
         try:
             sentence = get_one_sentence(up_list)
             print(f"Second: {sentence}")
-            link_list, link_for_issue = make_pic_and_save(sentence)
+            link_for_issue = make_pic_and_save(sentence)
         except Exception as e:
             print(str(e))
     body = GET_UP_MESSAGE_TEMPLATE.format(get_up_time=get_up_time, sentence=sentence)
-    print(body, link_list, link_for_issue)
-    return body, is_get_up_early, link_list, link_for_issue
+    print(body, link_for_issue)
+    return body, is_get_up_early, link_for_issue
 
 
 def main(
     github_token,
     repo_name,
-    bing_cookie,
     weather_message,
     tele_token,
     tele_chat_id,
@@ -157,9 +152,7 @@ def main(
     if is_today:
         print("Today I have recorded the wake up time")
         return
-    early_message, is_get_up_early, link_list, link_for_issue = make_get_up_message(
-        bing_cookie, up_list
-    )
+    early_message, is_get_up_early, link_for_issue = make_get_up_message(up_list)
     body = early_message
     if weather_message:
         weather_message = f"现在的天气是{weather_message}\n"
@@ -221,7 +214,6 @@ if __name__ == "__main__":
     main(
         options.github_token,
         options.repo_name,
-        options.bing_cookie,
         options.weather_message,
         options.tele_token,
         options.tele_chat_id,
