@@ -27,6 +27,7 @@ SD_API_KEY = os.environ.get("SD_API_KEY")
 if not SD_API_KEY:
     raise Exception("you need get SD_API_KEY")
 
+
 def get_all_til_knowledge_file():
     til_dir = Path(os.environ.get("MORNING_REPO_NAME"))
     today_dir = random.choice(list(til_dir.iterdir()))
@@ -115,7 +116,7 @@ def make_pic_and_save(sentence):
     return image_url_for_issue
 
 
-def make_get_up_message( up_list):
+def make_get_up_message(up_list):
     sentence = get_one_sentence(up_list)
     now = pendulum.now(TIMEZONE)
     # 3 - 9 means early for me
@@ -174,7 +175,12 @@ def main(
         if tele_token and tele_chat_id:
             bot = telebot.TeleBot(tele_token)
             if link_for_issue:
-                bot.send_photo(tele_chat_id, link_for_issue, disable_notification=True)
+                try:
+                    bot.send_photo(
+                        tele_chat_id, link_for_issue, disable_notification=True
+                    )
+                except:
+                    pass
             til_body = "TIL:\n"
             user = os.environ.get("MORNING_USER_NAME")
             repo = os.environ.get("MORNING_REPO_NAME")
