@@ -25,7 +25,9 @@ if api_base := os.environ.get("OPENAI_API_BASE"):
     client = OpenAI(base_url=api_base, api_key=os.environ.get("OPENAI_API_KEY"))
 else:
     client = OpenAI()
-
+SD_API_KEY = os.environ.get("SD_API_KEY")
+if not SD_API_KEY:
+    raise Exception("you need get SD_API_KEY")
 
 def get_all_til_knowledge_file():
     til_dir = Path(os.environ.get("MORNING_REPO_NAME"))
@@ -77,10 +79,9 @@ def get_today_get_up_status(issue):
     return is_today, up_list
 
 
-def make_pic_and_save(sentence, bing_cookie):
+def make_pic_and_save(sentence):
     # for bing image when dall-e3 open drop this function
-    i = ImageGen(bing_cookie)
-    prompt = f"revise `{sentence}` to a DALL-E prompt"
+    prompt = f"revise `{sentence}` to a stable diffusion prompt"
     try:
         completion = client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
@@ -91,17 +92,30 @@ def make_pic_and_save(sentence, bing_cookie):
     except:
         print("revise sentence wrong")
 
-    images = i.get_images(sentence)
     now = pendulum.now()
     year = str(now.year)
     date_str = now.to_date_string()
     new_path = os.path.join("OUT_DIR", date_str)
     if not os.path.exists(new_path):
         os.mkdir(new_path)
-    i.save_images(images, new_path)
-    index = random.randint(0, len(images) - 1)
+    response = requests.post(
+        f"https://api.stability.ai/v2beta/stable-image/generate/sd3",
+        headers={"authorization": f"Bearer {SD_API_KEY}", "accept": "image/*"},
+        files={"none": ""},
+        data={
+            "prompt": prompt,
+            "model": "sd3-turbo",
+            "output_format": "jpeg",
+        },
+    )
+    index = 1
+    if response.status_code == 200:
+        with open(f"{new_path}/{index}.jpeg", "wb") as file:
+            file.write(response.content)
+    else:
+        print(str(response.json()))
     image_url_for_issue = f"https://github.com/yihong0618/{year}/blob/main/OUT_DIR/{date_str}/{index}.jpeg?raw=true"
-    return images, image_url_for_issue
+    return image_url_for_issue
 
 
 def make_get_up_message(bing_cookie, up_list):
@@ -113,14 +127,14 @@ def make_get_up_message(bing_cookie, up_list):
     link_list = []
     link_for_issue = ""
     try:
-        link_list, link_for_issue = make_pic_and_save(sentence, bing_cookie)
+        link_list, link_for_issue = make_pic_and_save(sentence)
     except Exception as e:
         print(str(e))
         # give it a second chance
         try:
             sentence = get_one_sentence(up_list)
             print(f"Second: {sentence}")
-            link_list, link_for_issue = make_pic_and_save(sentence, bing_cookie)
+            link_list, link_for_issue = make_pic_and_save(sentence)
         except Exception as e:
             print(str(e))
     body = GET_UP_MESSAGE_TEMPLATE.format(get_up_time=get_up_time, sentence=sentence)
@@ -166,10 +180,8 @@ def main(
         # send to telegram
         if tele_token and tele_chat_id:
             bot = telebot.TeleBot(tele_token)
-            photos_list = [InputMediaPhoto(i) for i in link_list]
-            photos_list[0].caption = body
             if link_for_issue:
-                bot.send_media_group(tele_chat_id, photos_list, disable_notification=True)
+                bot.send_photo(tele_chat_id, link_for_issue, disable_notification=True)
             til_body = "TIL:\n"
             user = os.environ.get("MORNING_USER_NAME")
             repo = os.environ.get("MORNING_REPO_NAME")
@@ -199,7 +211,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "--weather_message", help="weather_message", nargs="?", default="", const=""
     )
-    parser.add_argument("bing_cookie", help="bing cookie")
     parser.add_argument(
         "--tele_token", help="tele_token", nargs="?", default="", const=""
     )
