@@ -36,3 +36,4 @@ til/html/html5-tidy.md
 til/quarto/trying-out-quarto.md
 til/rails/simpleform-default-maxlength.md
 til/go/access-go-docs-offline.md
+til/cosmopolitan/ecosystem.md
