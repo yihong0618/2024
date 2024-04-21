@@ -37,3 +37,4 @@ til/quarto/trying-out-quarto.md
 til/rails/simpleform-default-maxlength.md
 til/go/access-go-docs-offline.md
 til/cosmopolitan/ecosystem.md
+til/docker/binding-to-0-0-0-0-in-rails.md
