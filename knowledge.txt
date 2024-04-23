@@ -39,3 +39,4 @@ til/go/access-go-docs-offline.md
 til/cosmopolitan/ecosystem.md
 til/docker/binding-to-0-0-0-0-in-rails.md
 til/python/call-pip-programatically.md
+til/jupyter/javascript-in-a-jupyter-notebook.md
