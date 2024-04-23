@@ -11,7 +11,7 @@ from openai import OpenAI
 import telegramify_markdown
 
 # 1 real get up #5 for test
-GET_UP_ISSUE_NUMBER = 1
+GET_UP_ISSUE_NUMBER = 5
 GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n {sentence} \r\n"
 SENTENCE_API = "https://v1.jinrishici.com/all"
 POEM_API = "https://v2.jinrishici.com/sentence"
@@ -26,6 +26,10 @@ else:
 SD_API_KEY = os.environ.get("SD_API_KEY")
 if not SD_API_KEY:
     raise Exception("you need get SD_API_KEY")
+
+
+def get_yesterday_md_file():
+    return f"{pendulum.yesterday(TIMEZONE).to_date_string()}.md"
 
 
 def get_all_til_knowledge_file():
@@ -120,7 +124,7 @@ def make_get_up_message(up_list):
     sentence = get_one_sentence(up_list)
     now = pendulum.now(TIMEZONE)
     # 3 - 9 means early for me
-    is_get_up_early = 3 <= now.hour <= 9
+    is_get_up_early = 3 <= now.hour <= 24
     get_up_time = now.to_datetime_string()
     link_for_issue = ""
     try:
@@ -161,6 +165,7 @@ def main(
         weather_message = f"现在的天气是{weather_message}\n"
         body = weather_message + early_message
     if is_get_up_early:
+
         with open("knowledge.txt") as f:
             all_my_knowledge_list = list(f.read().splitlines())
         til_mds_list = get_all_til_knowledge_file()
@@ -183,24 +188,29 @@ def main(
                     )
                 except:
                     pass
+            # my file and other files
+            yseterday_md = get_yesterday_md_file()
             til_body = "TIL:\n"
-            user = os.environ.get("MORNING_USER_NAME")
-            repo = os.environ.get("MORNING_REPO_NAME")
-            branch = os.environ.get("MORNING_BRANCH_NAME")
-            link = f"https://github.com/{user}/{repo}/blob/{branch}/{'/'.join(file_name.split('/')[1:])}"
+            if os.path.exists(f"TIL/{get_yesterday_md_file}"):
+                link = f"https://github.com/yihong0618/2024/blob/main/TIL/{get_yesterday_md_file}"
+                file_name = yseterday_md
+            else:
+                user = os.environ.get("MORNING_USER_NAME")
+                repo = os.environ.get("MORNING_REPO_NAME")
+                branch = os.environ.get("MORNING_BRANCH_NAME")
+                link = f"https://github.com/{user}/{repo}/blob/{branch}/{'/'.join(file_name.split('/')[1:])}"
             til_body = til_body + "Link: " + link + "\n"
             with open(file_name) as f:
                 til_body = til_body + f.read()
                 if len(til_body) > 4095:
                     til_body = til_body[:4094]
                 til_body = telegramify_markdown.convert(til_body)
-            bot.send_message(
-                tele_chat_id,
-                til_body,
-                parse_mode="MarkdownV2",
-                disable_notification=True,
-            )
-
+        bot.send_message(
+            tele_chat_id,
+            til_body,
+            parse_mode="MarkdownV2",
+            disable_notification=True,
+        )
     else:
         print("You wake up late")
 
