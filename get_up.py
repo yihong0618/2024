@@ -23,9 +23,6 @@ if api_base := os.environ.get("OPENAI_API_BASE"):
     client = OpenAI(base_url=api_base, api_key=os.environ.get("OPENAI_API_KEY"))
 else:
     client = OpenAI()
-SD_API_KEY = os.environ.get("SD_API_KEY")
-if not SD_API_KEY:
-    raise Exception("you need get SD_API_KEY")
 
 
 def get_all_til_knowledge_file():
@@ -100,6 +97,7 @@ def make_pic_and_save(sentence):
         model="dall-e-3", prompt=sentence, size="1024x1024", quality="standard", n=1
     )
     image_url_for_issue = response.model_dump()["data"][0]["url"]
+    print(image_url_for_issue)
     return image_url_for_issue
 
 
@@ -107,7 +105,7 @@ def make_get_up_message(up_list):
     sentence = get_one_sentence(up_list)
     now = pendulum.now(TIMEZONE)
     # 3 - 9 means early for me
-    is_get_up_early = 3 <= now.hour <= 24 
+    is_get_up_early = 3 <= now.hour <= 24
     get_up_time = now.to_datetime_string()
     link_for_issue = ""
     try:
