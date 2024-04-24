@@ -31,7 +31,7 @@ jobs:
           pip install -r requirements.txt
       - name: GET RANDOM REOO
         run: |
-          repos=("jbranchaud/til" "simonw/til" "thoughtbot/til") # add more repos here
+          repos=("jbranchaud/til" "simonw/til" "thoughtbot/til" "yihong0618/til") # add more repos here
           random_repo=${repos[$RANDOM % ${#repos[@]}]}
           IFS='/' read -ra parts <<< "$random_repo"
           echo "MORNING_USER_NAME=${parts[0]}" >> $GITHUB_ENV
