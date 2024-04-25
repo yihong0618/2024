@@ -42,3 +42,4 @@ til/python/call-pip-programatically.md
 til/jupyter/javascript-in-a-jupyter-notebook.md
 til/auth0/auth0-logout.md
 til/git/reference-a-commit-via-commit-message-pattern-matching.md
+til/neovim/create-user-command-to-open-init-config.md
