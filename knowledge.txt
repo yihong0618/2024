@@ -46,3 +46,4 @@ til/neovim/create-user-command-to-open-init-config.md
 til/html/determine-which-button-submitted-the-form.md
 til/spatialite/gunion-to-combine-geometries.md
 til/ab/apache-bench-length-errors.md
+til/brew/list-all-services-managed-by-brew.md
