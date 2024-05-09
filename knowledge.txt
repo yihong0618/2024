@@ -50,3 +50,4 @@ til/brew/list-all-services-managed-by-brew.md
 til/linux/bluetooth.md
 til/httpx/openai-log-requests-responses.md
 til/docker/fig-run-new-container.md
+til/exif/orientation-and-location.md
