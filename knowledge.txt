@@ -51,3 +51,4 @@ til/linux/bluetooth.md
 til/httpx/openai-log-requests-responses.md
 til/docker/fig-run-new-container.md
 til/exif/orientation-and-location.md
+til/ember/property-brace-expansion.md
