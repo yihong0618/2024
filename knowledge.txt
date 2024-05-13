@@ -52,3 +52,4 @@ til/httpx/openai-log-requests-responses.md
 til/docker/fig-run-new-container.md
 til/exif/orientation-and-location.md
 til/ember/property-brace-expansion.md
+til/ics/google-calendar-ics-subscribe-link.md
