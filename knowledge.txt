@@ -58,3 +58,4 @@ til/heroku/deploy-a-review-app-to-a-different-stack.md
 til/sed/use-an-alternative-delimiter-in-a-substitution.md
 til/linux/rpm.md
 til/llms/code-interpreter-expansions.md
+til/git/squashing-commits.md
