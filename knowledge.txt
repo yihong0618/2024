@@ -59,3 +59,4 @@ til/sed/use-an-alternative-delimiter-in-a-substitution.md
 til/linux/rpm.md
 til/llms/code-interpreter-expansions.md
 til/git/squashing-commits.md
+til/rails/include-devise-helpers-in-your-controller-tests.md
