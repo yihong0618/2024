@@ -61,3 +61,4 @@ til/llms/code-interpreter-expansions.md
 til/git/squashing-commits.md
 til/rails/include-devise-helpers-in-your-controller-tests.md
 til/pyodide/cryptography-in-pyodide.md
+til/cocktails/tommys-margarita.md
