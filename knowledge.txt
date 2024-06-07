@@ -62,3 +62,4 @@ til/git/squashing-commits.md
 til/rails/include-devise-helpers-in-your-controller-tests.md
 til/pyodide/cryptography-in-pyodide.md
 til/cocktails/tommys-margarita.md
+til/javascript/globally-install-a-package-with-yarn.md
