@@ -29,14 +29,14 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-      - name: GET RANDOM REOO
-        run: |
-          repos=("jbranchaud/til" "simonw/til" "thoughtbot/til" "yihong0618/til") # add more repos here
-          random_repo=${repos[$RANDOM % ${#repos[@]}]}
-          IFS='/' read -ra parts <<< "$random_repo"
-          echo "MORNING_USER_NAME=${parts[0]}" >> $GITHUB_ENV
-          echo "MORNING_REPO_NAME=${parts[1]}" >> $GITHUB_ENV
-          echo "MORNING_BRANCH_NAME=$(git remote show https://github.com/${parts[0]}/${parts[1]}.git | awk '/HEAD branch/ {print $NF}')" >> $GITHUB_ENV
+      # - name: GET RANDOM REOO
+      #   run: |
+      #     repos=("jbranchaud/til" "simonw/til" "thoughtbot/til" "yihong0618/til") # add more repos here
+      #     random_repo=${repos[$RANDOM % ${#repos[@]}]}
+      #     IFS='/' read -ra parts <<< "$random_repo"
+      #     echo "MORNING_USER_NAME=${parts[0]}" >> $GITHUB_ENV
+      #     echo "MORNING_REPO_NAME=${parts[1]}" >> $GITHUB_ENV
+      #     echo "MORNING_BRANCH_NAME=$(git remote show https://github.com/${parts[0]}/${parts[1]}.git | awk '/HEAD branch/ {print $NF}')" >> $GITHUB_ENV
       
       - name: GET UP
         uses: nick-fields/retry@v3
@@ -45,9 +45,7 @@ jobs:
           max_attempts: 2
           retry_on: error
           command: |
-            git clone https://github.com/$MORNING_USER_NAME/$MORNING_REPO_NAME.git --depth 1
             python get_up.py ${{ secrets.G_T }} ${{ github.repository }}  --weather_message ": ${{ github.event.inputs.message }}" --tele_token ${{ secrets.TG_TOKEN }} --tele_chat_id ${{ secrets.TG_CHAT_ID }}
-            rm -rf til
       - name: Push New Pic
         run: |
           git config --local user.email "action@github.com"

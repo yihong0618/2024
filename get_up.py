@@ -104,8 +104,8 @@ def make_pic_and_save(sentence):
 def make_get_up_message(up_list):
     sentence = get_one_sentence(up_list)
     now = pendulum.now(TIMEZONE)
-    # 3 - 9 means early for me
-    is_get_up_early = 3 <= now.hour <= 24
+    # 3 - 7 means early for me
+    is_get_up_early = 3 <= now.hour <= 7
     get_up_time = now.to_datetime_string()
     link_for_issue = ""
     try:
@@ -144,17 +144,17 @@ def main(
         weather_message = f"现在的天气是{weather_message}\n"
         body = weather_message + early_message
     if is_get_up_early:
-        with open("knowledge.txt") as f:
-            all_my_knowledge_list = list(f.read().splitlines())
-        til_mds_list = get_all_til_knowledge_file()
-        file_name = None
-        if til_mds_list:
-            while True:
-                file_name = random.choice(til_mds_list)
-                if file_name not in all_my_knowledge_list:
-                    break
-            with open("knowledge.txt", "a") as f:
-                f.write(f"{file_name}\n")
+        # with open("knowledge.txt") as f:
+        #     all_my_knowledge_list = list(f.read().splitlines())
+        # til_mds_list = get_all_til_knowledge_file()
+        # file_name = None
+        # if til_mds_list:
+        #     while True:
+        #         file_name = random.choice(til_mds_list)
+        #         if file_name not in all_my_knowledge_list:
+        #             break
+        #     with open("knowledge.txt", "a") as f:
+        #         f.write(f"{file_name}\n")
         comment = body + f"![image]({link_for_issue})"
         issue.create_comment(comment)
         # send to telegram
@@ -170,24 +170,6 @@ def main(
                     )
                 except:
                     pass
-            if file_name:
-                til_body = "TIL:\n"
-                user = os.environ.get("MORNING_USER_NAME")
-                repo = os.environ.get("MORNING_REPO_NAME")
-                branch = os.environ.get("MORNING_BRANCH_NAME")
-                link = f"https://github.com/{user}/{repo}/blob/{branch}/{'/'.join(file_name.split('/')[1:])}"
-                til_body = til_body + "Link: " + link + "\n"
-                with open(file_name) as f:
-                    til_body = til_body + f.read()
-                    if len(til_body) > 4095:
-                        til_body = til_body[:4094]
-                    til_body = telegramify_markdown.convert(til_body)
-            bot.send_message(
-                tele_chat_id,
-                til_body,
-                parse_mode="MarkdownV2",
-                disable_notification=True,
-            )
     else:
         print("You wake up late")
 
