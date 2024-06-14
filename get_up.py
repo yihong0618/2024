@@ -177,10 +177,10 @@ def main(
                 now = pendulum.now()
                 date_str = now.to_date_string()
                 new_path = os.path.join("OUT_DIR", date_str)
-                if os.path.exists(f"{new_path}/1.mp4"):
+                if os.path.exists(f"{new_path}/output.mp4"):
                     bot.send_video(
                         tele_chat_id,
-                        open(f"{new_path}/1.mp4", "rb"),
+                        open(f"{new_path}/output.mp4", "rb"),
                         caption=body,
                         disable_notification=True,
                     )
