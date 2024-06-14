@@ -11,7 +11,7 @@ from openai import OpenAI
 import telegramify_markdown
 
 # 1 real get up #5 for test
-GET_UP_ISSUE_NUMBER = 5
+GET_UP_ISSUE_NUMBER = 1
 GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n {sentence} \r\n"
 SENTENCE_API = "https://v1.jinrishici.com/all"
 POEM_API = "https://v2.jinrishici.com/sentence"
@@ -100,6 +100,16 @@ def make_pic_and_save(sentence):
     response = requests.get(image_url_for_issue)
     with open(f"{new_path}/1.png", "wb") as f:
         f.write(response.content)
+    # try to use this to generate video
+    try:
+        from luma import VideoGen
+
+        cookie = os.environ.get("LUMA_COOKIE")
+        v = VideoGen(cookie, f"{new_path}/1.png")
+        v.save_video(f"{new_path}/1.mp4")
+    except:
+        print("No luma")
+        pass
     return image_url_for_issue
 
 
@@ -107,7 +117,7 @@ def make_get_up_message(up_list):
     sentence = get_one_sentence(up_list)
     now = pendulum.now(TIMEZONE)
     # 3 - 7 means early for me
-    is_get_up_early = 3 <= now.hour <= 24 
+    is_get_up_early = 3 <= now.hour <= 7
     get_up_time = now.to_datetime_string()
     link_for_issue = ""
     try:
@@ -146,7 +156,6 @@ def main(
         weather_message = f"现在的天气是{weather_message}\n"
         body = weather_message + early_message
     if is_get_up_early:
-        return
         # with open("knowledge.txt") as f:
         #     all_my_knowledge_list = list(f.read().splitlines())
         # til_mds_list = get_all_til_knowledge_file()
@@ -164,15 +173,26 @@ def main(
         if tele_token and tele_chat_id:
             bot = telebot.TeleBot(tele_token)
             if link_for_issue:
-                try:
-                    bot.send_photo(
+                now = pendulum.now()
+                date_str = now.to_date_string()
+                new_path = os.path.join("OUT_DIR", date_str)
+                if os.path.exists(f"{new_path}/1.mp4"):
+                    bot.send_video(
                         tele_chat_id,
-                        link_for_issue,
+                        open(f"{new_path}/1.mp4", "rb"),
                         caption=body,
                         disable_notification=True,
                     )
-                except:
-                    pass
+                else:
+                    try:
+                        bot.send_photo(
+                            tele_chat_id,
+                            link_for_issue,
+                            caption=body,
+                            disable_notification=True,
+                        )
+                    except:
+                        pass
     else:
         print("You wake up late")
 
