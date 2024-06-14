@@ -11,7 +11,7 @@ from openai import OpenAI
 import telegramify_markdown
 
 # 1 real get up #5 for test
-GET_UP_ISSUE_NUMBER = 1
+GET_UP_ISSUE_NUMBER = 5
 GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n {sentence} \r\n"
 SENTENCE_API = "https://v1.jinrishici.com/all"
 POEM_API = "https://v2.jinrishici.com/sentence"
@@ -97,7 +97,9 @@ def make_pic_and_save(sentence):
         model="dall-e-3", prompt=sentence, size="1024x1024", quality="standard", n=1
     )
     image_url_for_issue = response.model_dump()["data"][0]["url"]
-    print(image_url_for_issue)
+    response = requests.get(image_url_for_issue)
+    with open(f"{new_path}/1.png", "wb") as f:
+        f.write(response.content)
     return image_url_for_issue
 
 
@@ -105,7 +107,7 @@ def make_get_up_message(up_list):
     sentence = get_one_sentence(up_list)
     now = pendulum.now(TIMEZONE)
     # 3 - 7 means early for me
-    is_get_up_early = 3 <= now.hour <= 7
+    is_get_up_early = 3 <= now.hour <= 24 
     get_up_time = now.to_datetime_string()
     link_for_issue = ""
     try:
@@ -144,6 +146,7 @@ def main(
         weather_message = f"现在的天气是{weather_message}\n"
         body = weather_message + early_message
     if is_get_up_early:
+        return
         # with open("knowledge.txt") as f:
         #     all_my_knowledge_list = list(f.read().splitlines())
         # til_mds_list = get_all_til_knowledge_file()
