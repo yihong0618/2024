@@ -105,7 +105,7 @@ def make_pic_and_save(sentence):
         from luma import VideoGen
 
         cookie = os.environ.get("LUMA_COOKIE")
-        v = VideoGen(cookie, f"{new_path}/output.png")
+        v = VideoGen(cookie, f"{new_path}/1.png")
         v.save_video("make this picture alive", new_path)
     except Exception as e:
         print("No luma")
