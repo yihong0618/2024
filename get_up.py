@@ -106,11 +106,12 @@ def make_pic_and_save(sentence):
 
         cookie = os.environ.get("LUMA_COOKIE")
         v = VideoGen(cookie, f"{new_path}/1.png")
-        v.save_video("make this picture alive", new_path)
+        video_path = v.save_video("make this picture alive", new_path)
+        return image_url_for_issue, video_path
     except Exception as e:
         print("No luma")
         print(str(e))
-    return image_url_for_issue
+    return image_url_for_issue, None
 
 
 def make_get_up_message(up_list):
@@ -120,20 +121,21 @@ def make_get_up_message(up_list):
     is_get_up_early = 3 <= now.hour <= 7
     get_up_time = now.to_datetime_string()
     link_for_issue = ""
+    video_path = None
     try:
-        link_for_issue = make_pic_and_save(sentence)
+        link_for_issue, video_path = make_pic_and_save(sentence)
     except Exception as e:
         print(str(e))
         # give it a second chance
         try:
             sentence = get_one_sentence(up_list)
             print(f"Second: {sentence}")
-            link_for_issue = make_pic_and_save(sentence)
+            link_for_issue, video_path = make_pic_and_save(sentence)
         except Exception as e:
             print(str(e))
     body = GET_UP_MESSAGE_TEMPLATE.format(get_up_time=get_up_time, sentence=sentence)
-    print(body, link_for_issue)
-    return body, is_get_up_early, link_for_issue
+    print(body, link_for_issue, video_path)
+    return body, is_get_up_early, link_for_issue, video_path
 
 
 def main(
@@ -150,7 +152,9 @@ def main(
     if is_today:
         print("Today I have recorded the wake up time")
         return
-    early_message, is_get_up_early, link_for_issue = make_get_up_message(up_list)
+    early_message, is_get_up_early, link_for_issue, video_path = make_get_up_message(
+        up_list
+    )
     body = early_message
     if weather_message:
         weather_message = f"现在的天气是{weather_message}\n"
@@ -173,13 +177,10 @@ def main(
         if tele_token and tele_chat_id:
             bot = telebot.TeleBot(tele_token)
             if link_for_issue:
-                now = pendulum.now()
-                date_str = now.to_date_string()
-                new_path = os.path.join("OUT_DIR", date_str)
-                if os.path.exists(f"{new_path}/output.mp4"):
+                if video_path:
                     bot.send_video(
                         tele_chat_id,
-                        open(f"{new_path}/output.mp4", "rb"),
+                        open(video_path, "rb"),
                         caption=body,
                         disable_notification=True,
                     )
