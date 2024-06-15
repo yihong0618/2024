@@ -110,7 +110,6 @@ def make_pic_and_save(sentence):
     except Exception as e:
         print("No luma")
         print(str(e))
-        raise Exception("No luma to generate video for test")
     return image_url_for_issue
 
 
