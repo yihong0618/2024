@@ -13,8 +13,11 @@ import telegramify_markdown
 # 1 real get up #5 for test
 GET_UP_ISSUE_NUMBER = 1
 GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n {sentence} \r\n"
+# in 2024-06-15 this one ssl error
 SENTENCE_API = "https://v1.jinrishici.com/all"
-POEM_API = "https://v2.jinrishici.com/sentence"
+SENTENCE_API = (
+    "https://api.sou-yun.cn/api/RecommendedReading?type=poem&needHtml=true&index=-1"
+)
 DEFAULT_SENTENCE = (
     "赏花归去马如飞\r\n去马如飞酒力微\r\n酒力微醒时已暮\r\n醒时已暮赏花归\r\n"
 )
@@ -44,10 +47,11 @@ def get_one_sentence(up_list):
     try:
         r = requests.get(SENTENCE_API)
         if r.ok:
-            concent = r.json().get("content")
-            if concent in up_list:
-                return get_one_sentence(up_list)
-            return concent
+            content = ""
+            concent_list = r.json()["Content"]["Poem"]["Clauses"]
+            for c in concent_list:
+                content += c["Content"] + "\r\n"
+            return content
         return DEFAULT_SENTENCE
     except:
         print("get SENTENCE_API wrong")
@@ -88,7 +92,6 @@ def make_pic_and_save(sentence):
         print("revise sentence wrong")
 
     now = pendulum.now()
-    year = str(now.year)
     date_str = now.to_date_string()
     new_path = os.path.join("OUT_DIR", date_str)
     if not os.path.exists(new_path):
@@ -106,7 +109,7 @@ def make_pic_and_save(sentence):
 
         cookie = os.environ.get("LUMA_COOKIE")
         v = VideoGen(cookie, f"{new_path}/1.png")
-        video_path = v.save_video("make this picture alive", new_path)
+        video_path = v.save_video(sentence, new_path)
         return image_url_for_issue, video_path
     except Exception as e:
         print("No luma")
