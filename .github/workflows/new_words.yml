@@ -1,0 +1,29 @@
+name: GET UP
+
+on:
+  workflow_dispatch:
+
+env:
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  OPENAI_API_BASE: ${{ secrets.OPENAI_API_BASE }}
+
+jobs:
+  sync:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: install python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip" # caching pip dependencies
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: GET UP
+        run: |
+          python cichang.py ${{ secrets.HJ_USERNAME_}} ${{ secrets.HJ_PASSWORD }} ${{ secrets.HJ_TOKEN }} --tele_token ${{ secrets.TG_TOKEN }} --tele_chat_id ${{ secrets.TG_HJ_CHAT_ID }}

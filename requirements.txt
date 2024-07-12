@@ -3,8 +3,5 @@ requests
 pendulum
 rich
 openai
-BingImageCreator-fork
 pyTelegramBotAPI
 telegramify-markdown
-suno_songs
-luma-creator
