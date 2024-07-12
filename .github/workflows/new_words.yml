@@ -26,4 +26,4 @@ jobs:
       
       - name: GET UP
         run: |
-          python cichang.py ${{ secrets.HJ_USERNAME_}} ${{ secrets.HJ_PASSWORD }} ${{ secrets.HJ_TOKEN }} --tele_token ${{ secrets.TG_TOKEN }} --tele_chat_id ${{ secrets.TG_HJ_CHAT_ID }}
+          python cichang.py ${{ secrets.HJ_USERNAME }} ${{ secrets.HJ_PASSWORD }} ${{ secrets.HJ_TOKEN }} --tele_token ${{ secrets.TG_TOKEN }} --tele_chat_id ${{ secrets.TG_HJ_CHAT_ID }}
