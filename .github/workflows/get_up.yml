@@ -9,10 +9,8 @@ on:
 
 env:
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-  SUNO_COOKIE: ${{ secrets.SUNO_COOKIE }}
-  LUMA_COOKIE: ${{ secrets.LUMA_COOKIE }}
+  KLING_COOKIE: ${{ secrets.KLING_COOKIE }}
   OPENAI_API_BASE: ${{ secrets.OPENAI_API_BASE }}
-  SD_API_KEY: ${{ secrets.SD3_KEY }}
 
 jobs:
   sync:
