@@ -12,7 +12,7 @@ from openai import OpenAI
 from kling import VideoGen, ImageGen
 
 # 1 real get up #5 for test
-GET_UP_ISSUE_NUMBER = 5
+GET_UP_ISSUE_NUMBER = 1
 GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n{sentence}\r\n"
 # in 2024-06-15 this one ssl error
 SENTENCE_API = "https://v1.jinrishici.com/all"
@@ -102,7 +102,7 @@ def make_get_up_message():
     sentence = get_one_sentence()
     now = pendulum.now(TIMEZONE)
     # 3 - 7 means early for me
-    is_get_up_early = 3 <= now.hour <= 24
+    is_get_up_early = 3 <= now.hour <= 7 
     get_up_time = now.to_datetime_string()
     try:
         images_list = make_pic_and_save(sentence)
