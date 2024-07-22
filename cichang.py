@@ -91,7 +91,7 @@ def make_xiaod_note(s):
         if not word_list:
             continue
         for word in word_list:
-            add_date = word["clientDateAdded"]
+            add_date = word["clientDateUpdated"]
             add_date = pendulum.parse(add_date)
             if add_date.day == now.day and add_date.month == now.month:
                 new_words.append(word["word"])
