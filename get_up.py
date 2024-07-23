@@ -102,7 +102,7 @@ def make_get_up_message():
     sentence = get_one_sentence()
     now = pendulum.now(TIMEZONE)
     # 3 - 7 means early for me
-    is_get_up_early = 3 <= now.hour <= 7 
+    is_get_up_early = 3 <= now.hour <= 7
     get_up_time = now.to_datetime_string()
     try:
         images_list = make_pic_and_save(sentence)
@@ -155,7 +155,12 @@ def main(
                 except Exception as e:
                     print(str(e))
                 v = VideoGen(KLING_COOKIE)
-                v.save_video("让画面动起来", "./output", image_url=images_list[0])
+                v.save_video(
+                    "让画面动起来",
+                    "./output",
+                    image_url=images_list[0],
+                    is_high_quality=True,
+                )
                 bot.send_video(
                     tele_chat_id,
                     open("output/0.mp4", "rb"),
