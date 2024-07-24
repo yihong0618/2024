@@ -103,7 +103,6 @@ def make_get_up_message():
     now = pendulum.now(TIMEZONE)
     # 3 - 7 means early for me
     is_get_up_early = 3 <= now.hour <= 7
-    get_up_time = now.to_datetime_string()
     try:
         images_list = make_pic_and_save(sentence)
     except Exception as e:
@@ -115,9 +114,7 @@ def make_get_up_message():
             images_list = make_pic_and_save(sentence)
         except Exception as e:
             print(str(e))
-    body = GET_UP_MESSAGE_TEMPLATE.format(get_up_time=get_up_time, sentence=sentence)
-    print(body, images_list)
-    return body, is_get_up_early, images_list
+    return sentence, is_get_up_early, images_list
 
 
 def main(
@@ -134,8 +131,10 @@ def main(
     if is_today:
         print("Today I have recorded the wake up time")
         return
-    early_message, is_get_up_early, images_list = make_get_up_message()
-    body = early_message
+    sentence, is_get_up_early, images_list = make_get_up_message()
+    get_up_time = pendulum.now(TIMEZONE).to_datetime_string()
+    body = GET_UP_MESSAGE_TEMPLATE.format(get_up_time=get_up_time, sentence=sentence)
+    early_message = body
     if weather_message:
         weather_message = f"现在的天气是{weather_message}\n"
         body = weather_message + early_message
