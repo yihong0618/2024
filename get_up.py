@@ -155,7 +155,7 @@ def main(
                     print(str(e))
                 v = VideoGen(KLING_COOKIE)
                 v.save_video(
-                    "让画面动起来",
+                    sentence,
                     "./output",
                     image_url=images_list[0],
                     is_high_quality=True,
