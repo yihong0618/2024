@@ -135,8 +135,8 @@ def main(user_name, password, token, tele_token, tele_chat_id):
     bot.send_message(tele_chat_id, "Definition:\n" + "\n".join(word_define_list))
     # ten words combine make a story using openai
     shuffle(word_list)
-    words_chunk = [word_list[i : i + 10] for i in range(0, len(word_list), 10)]
-    make_story_prompt = "Make a story using these words the story should be written in Japanese words: `{}`, then translate to Chinese."
+    words_chunk = [word_list[i : i + 20] for i in range(0, len(word_list), 20)]
+    make_story_prompt = "Make a story using these words the story should be written in Japanese words: `{}`"
     for chunk in words_chunk:
         words = ",".join(chunk)
         prompt = make_story_prompt.format(words)

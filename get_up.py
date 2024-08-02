@@ -159,10 +159,11 @@ def main(
                     "./output",
                     image_url=images_list[0],
                     is_high_quality=True,
+                    auto_extend=True,
                 )
                 bot.send_video(
                     tele_chat_id,
-                    open("output/0.mp4", "rb"),
+                    open("output/0.mp4", "rb"),  # TODO fix this shit
                     caption=body,
                     disable_notification=True,
                 )
