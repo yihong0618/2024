@@ -13,7 +13,7 @@ from kling import VideoGen, ImageGen
 
 # 1 real get up #5 for test
 GET_UP_ISSUE_NUMBER = 1
-GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n 起床啦。\r\n\r\n 今天的一句诗:\r\n{sentence}\r\n"
+GET_UP_MESSAGE_TEMPLATE = "今天的起床时间是--{get_up_time}.\r\n\r\n起床啦。\r\n\r\n今天的一句诗:\r\n{sentence}\r\n"
 # in 2024-06-15 this one ssl error
 SENTENCE_API = "https://v1.jinrishici.com/all"
 
@@ -21,6 +21,7 @@ DEFAULT_SENTENCE = (
     "赏花归去马如飞\r\n去马如飞酒力微\r\n酒力微醒时已暮\r\n醒时已暮赏花归\r\n"
 )
 TIMEZONE = "Asia/Shanghai"
+YESTERDAY_QUESTION = "问我关于我昨天的五个问题？只返回问题。"
 if api_base := os.environ.get("OPENAI_API_BASE"):
     client = OpenAI(base_url=api_base, api_key=os.environ.get("OPENAI_API_KEY"))
 else:
@@ -117,6 +118,15 @@ def make_get_up_message():
     return sentence, is_get_up_early, images_list
 
 
+def get_yesterday_question():
+    completion = client.chat.completions.create(
+        messages=[{"role": "user", "content": YESTERDAY_QUESTION}],
+        model="gpt-4o-2024-05-13",
+    )
+    answer = completion.choices[0].message.content.encode("utf8").decode()
+    return answer
+
+
 def main(
     github_token,
     repo_name,
@@ -138,12 +148,15 @@ def main(
     if weather_message:
         weather_message = f"现在的天气是{weather_message}\n"
         body = weather_message + early_message
+    yesterday_question = get_yesterday_question()
+    body = body + f"\n\n关于昨天的问题？\n{yesterday_question}"
     if is_get_up_early:
         comment = body + f"![image]({images_list[0]})"
         issue.create_comment(comment)
         # send to telegram
         if tele_token and tele_chat_id:
             bot = telebot.TeleBot(tele_token)
+
             if images_list:
                 try:
                     photos_list = [InputMediaPhoto(i) for i in images_list[:4]]
@@ -164,7 +177,7 @@ def main(
                 bot.send_video(
                     tele_chat_id,
                     open("output/0.mp4", "rb"),  # TODO fix this shit
-                    caption=body,
+                    caption="新的一天",
                     disable_notification=True,
                 )
     else:
