@@ -157,7 +157,11 @@ def main(user_name, password, token, tele_token, tele_chat_id):
             for word in chunk:
                 story = story.replace(word, f"*{word}*")
             # create a temp mp3 file
-            with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as f:
+            with tempfile.NamedTemporaryFile(
+                prefix=f"words_{pendulum.now().to_date_string()}",
+                suffix=".mp3",
+                delete=False,
+            ) as f:
                 speech_file_path = f.name
                 audio.write_to_file(speech_file_path)
                 content = head + story

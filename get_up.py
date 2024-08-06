@@ -21,7 +21,7 @@ DEFAULT_SENTENCE = (
     "赏花归去马如飞\r\n去马如飞酒力微\r\n酒力微醒时已暮\r\n醒时已暮赏花归\r\n"
 )
 TIMEZONE = "Asia/Shanghai"
-YESTERDAY_QUESTION = "问我关于我昨天的五个问题？只返回问题。"
+YESTERDAY_QUESTION = "问我关于我昨天过的怎么样的五个问题。只返回问题。"
 if api_base := os.environ.get("OPENAI_API_BASE"):
     client = OpenAI(base_url=api_base, api_key=os.environ.get("OPENAI_API_KEY"))
 else:
