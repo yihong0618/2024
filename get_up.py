@@ -21,7 +21,7 @@ DEFAULT_SENTENCE = (
     "赏花归去马如飞\r\n去马如飞酒力微\r\n酒力微醒时已暮\r\n醒时已暮赏花归\r\n"
 )
 TIMEZONE = "Asia/Shanghai"
-YESTERDAY_QUESTION = "问我关于我昨天过的怎么样的五个问题。只返回问题。"
+YESTERDAY_QUESTION = "问我关于我昨天过的怎么样的五个问题。请不要包含这些问题：{questions}, 并只返回问题。"
 if api_base := os.environ.get("OPENAI_API_BASE"):
     client = OpenAI(base_url=api_base, api_key=os.environ.get("OPENAI_API_KEY"))
 else:
@@ -119,11 +119,22 @@ def make_get_up_message():
 
 
 def get_yesterday_question():
+    # get yesterday's questions
+    with open("questions.txt") as f:
+        questions = f.read()
+        print(questions)
+
     completion = client.chat.completions.create(
-        messages=[{"role": "user", "content": YESTERDAY_QUESTION}],
+        messages=[
+            {"role": "user", "content": YESTERDAY_QUESTION.format(questions=questions)}
+        ],
         model="gpt-4o-2024-05-13",
     )
     answer = completion.choices[0].message.content.encode("utf8").decode()
+    print(answer)
+    # write the answer to a file
+    with open("questions.txt", "w") as f:
+        f.write(answer)
     return answer
 
 
@@ -141,6 +152,7 @@ def main(
     if is_today:
         print("Today I have recorded the wake up time")
         return
+    yesterday_question = get_yesterday_question()
     sentence, is_get_up_early, images_list = make_get_up_message()
     get_up_time = pendulum.now(TIMEZONE).to_datetime_string()
     body = GET_UP_MESSAGE_TEMPLATE.format(get_up_time=get_up_time, sentence=sentence)
@@ -148,7 +160,6 @@ def main(
     if weather_message:
         weather_message = f"现在的天气是{weather_message}\n"
         body = weather_message + early_message
-    yesterday_question = get_yesterday_question()
     body = body + f"\n\n关于昨天的问题？\n{yesterday_question}"
     if is_get_up_early:
         comment = body + f"![image]({images_list[0]})"
