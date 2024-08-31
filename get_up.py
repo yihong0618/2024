@@ -187,7 +187,7 @@ def main(
                 bot.send_video(
                     tele_chat_id,
                     open("output/0.mp4", "rb"),  # TODO fix this shit
-                    caption="新的一天",
+                    caption=body,
                     disable_notification=True,
                 )
     else:
