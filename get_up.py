@@ -2,6 +2,7 @@ import argparse
 import os
 from pathlib import Path
 import random
+import time
 
 import pendulum
 import requests
@@ -167,16 +168,21 @@ def main(
         # send to telegram
         if tele_token and tele_chat_id:
             bot = telebot.TeleBot(tele_token)
+            video_caption = ""
 
             if images_list:
                 try:
+                    # sleep for waiting for the image to be generated
+                    time.sleep(4)
                     photos_list = [InputMediaPhoto(i) for i in images_list[:4]]
                     photos_list[0].caption = body
                     bot.send_media_group(
                         tele_chat_id, photos_list, disable_notification=True
                     )
+                    video_caption = "新的一天开始了"
                 except Exception as e:
                     print(str(e))
+                    video_caption = body
                 v = VideoGen(KLING_COOKIE)
                 v.save_video(
                     sentence,
@@ -187,7 +193,7 @@ def main(
                 bot.send_video(
                     tele_chat_id,
                     open("output/0.mp4", "rb"),  # TODO fix this shit
-                    caption=body,
+                    caption=video_caption,
                     disable_notification=True,
                 )
     else:
