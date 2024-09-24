@@ -189,6 +189,7 @@ def main(
                     "./output",
                     image_url=images_list[0],
                     is_high_quality=True,
+                    model_name="1.5",
                 )
                 bot.send_video(
                     tele_chat_id,
