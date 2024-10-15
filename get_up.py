@@ -104,7 +104,8 @@ def make_get_up_message():
     sentence = get_one_sentence()
     now = pendulum.now(TIMEZONE)
     # 3 - 7 means early for me
-    is_get_up_early = 3 <= now.hour <= 7
+    ###  make it to 9 in 2024.10.15 for maybe I forgot it ###
+    is_get_up_early = 3 <= now.hour <= 9
     try:
         images_list = make_pic_and_save(sentence)
     except Exception as e:
@@ -123,7 +124,6 @@ def get_yesterday_question():
     # get yesterday's questions
     with open("questions.txt") as f:
         questions = f.read()
-        print(questions)
 
     completion = client.chat.completions.create(
         messages=[
@@ -132,7 +132,6 @@ def get_yesterday_question():
         model="gpt-4o-2024-05-13",
     )
     answer = completion.choices[0].message.content.encode("utf8").decode()
-    print(answer)
     # write the answer to a file
     with open("questions.txt", "w") as f:
         f.write(answer)
