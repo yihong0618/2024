@@ -167,7 +167,6 @@ def main(
         # send to telegram
         if tele_token and tele_chat_id:
             bot = telebot.TeleBot(tele_token)
-            video_caption = ""
 
             if images_list:
                 try:
@@ -178,24 +177,8 @@ def main(
                     bot.send_media_group(
                         tele_chat_id, photos_list, disable_notification=True
                     )
-                    video_caption = "新的一天开始了"
                 except Exception as e:
                     print(str(e))
-                    video_caption = body
-                v = VideoGen(KLING_COOKIE)
-                v.save_video(
-                    sentence,
-                    "./output",
-                    image_url=images_list[0],
-                    is_high_quality=True,
-                    model_name="1.5",
-                )
-                bot.send_video(
-                    tele_chat_id,
-                    open("output/0.mp4", "rb"),  # TODO fix this shit
-                    caption=video_caption,
-                    disable_notification=True,
-                )
     else:
         print("You wake up late")
 
