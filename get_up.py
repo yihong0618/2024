@@ -156,10 +156,17 @@ def main(
     sentence, is_get_up_early, images_list = make_get_up_message()
     get_up_time = pendulum.now(TIMEZONE).to_datetime_string()
     body = GET_UP_MESSAGE_TEMPLATE.format(get_up_time=get_up_time, sentence=sentence)
+    # left ? days to next year
     early_message = body
-    if weather_message:
-        weather_message = f"现在的天气是{weather_message}\n"
-        body = weather_message + early_message
+    next_year = pendulum.datetime(pendulum.now().year + 1, 1, 1)
+    left_days = (next_year - pendulum.now()).days
+    left_message = f"还有 {left_days} 天今年就过完了。。。\n"
+    body = left_message + early_message
+
+    # early_message = body
+    # if weather_message.strip() == "hello":
+    #     weather_message = f"现在的天气是{weather_message}\n"
+    #     body = weather_message + early_message
     body = body + f"\n\n关于昨天的问题？\n{yesterday_question}"
     if is_get_up_early:
         comment = body + f"![image]({images_list[0]})"
